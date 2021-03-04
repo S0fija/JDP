@@ -6,8 +6,7 @@ using JDP.Models;
 
 namespace JDP.Repositories
 {
-    public class ExamRepository :
-        IExamRepository
+    public class ExamRepository : IExamRepository
     {
         public async Task<IEnumerable<Exam>> GetExams()
         {

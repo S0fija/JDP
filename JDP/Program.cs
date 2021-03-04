@@ -15,17 +15,16 @@ namespace JDP
         static async Task Main(string[] args)
         {
             var serviceProvider = AppStartup.BuildServiceProvider();
+
             var examService = serviceProvider.GetService<IExamService>();
-            var studentService = serviceProvider.GetService<IStudentService>();
             var exams =  await examService.GetListOfAvailableExams();
-
-            studentService.GetStudentsGroupedByStatus();
-
             exams.ToList().ForEach(exam =>
             {
                 Console.WriteLine(exam.ExamName);
             });
-            
+
+            var studentService = serviceProvider.GetService<IStudentService>();
+            var studentStatus = await studentService.GetStudentsGroupedByStatus();
         }
     }
 }

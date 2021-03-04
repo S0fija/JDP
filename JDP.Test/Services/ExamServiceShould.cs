@@ -30,11 +30,9 @@ namespace JDP.Test.Services
                 .ReturnsAsync(exams);
 
             // Act
-
             var examsResults = await _systemUnderTest.GetListOfAvailableExams();
 
             // Assert
-
             examsResults.Should().HaveCount(3);
             examsResults.FirstOrDefault()?.ExamName.Should().Be("Exam 1");
             examsResults.ToList()[1]?.ExamName.Should().Be("Exam 2");
@@ -43,7 +41,6 @@ namespace JDP.Test.Services
             /// ...
 
             //OR
-
             Assert.Equal(3, examsResults.Count());
             Assert.Equal("Exam 1", examsResults.FirstOrDefault()?.ExamName);
             /// ...

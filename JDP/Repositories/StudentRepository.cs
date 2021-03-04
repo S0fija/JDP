@@ -9,8 +9,7 @@ using JDP.Models;
 
 namespace JDP.Repositories
 {
-    public class StudentRepository :
-        IStudentRepository
+    public class StudentRepository : IStudentRepository
     {
         public async Task<Student> GetStudentBy(int id)
         {
