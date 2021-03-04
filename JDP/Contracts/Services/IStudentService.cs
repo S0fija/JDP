@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using JDP.Dtos;
-using JDP.Models;
+﻿using JDP.Dtos;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace JDP.Contracts.Services
 {
@@ -8,7 +8,7 @@ namespace JDP.Contracts.Services
     {
         Task<StudentStatusInfoDto> GetStudentsGroupedByStatus();
 
-        Task<ExamDto> GetListOfAvailableExamsToEnrollFroStudent(int studentId);
+        Task<IEnumerable<ExamDto>> GetListOfAvailableExamsToEnrollForStudent(int studentId);
 
         Task<StudentExamListDto> GetStudentExamListWithGrades(int studentId);
     }
