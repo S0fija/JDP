@@ -25,6 +25,9 @@ namespace JDP
 
             var studentService = serviceProvider.GetService<IStudentService>();
             var studentStatus = await studentService.GetListOfAvailableExamsToEnrollForStudent(4);
+            var studentsExamsGrades = await studentService.GetStudentExamListWithGrades(4);
+
+            var nesto = 0;
         }
     }
 }

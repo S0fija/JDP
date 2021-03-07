@@ -2,7 +2,6 @@
 using JDP.Contracts.Services;
 using JDP.Dtos;
 using JDP.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +22,6 @@ namespace JDP.Services
         }
 
         #region StudentsGroupedByStatus
-
         public async Task<StudentStatusInfoDto> GetStudentsGroupedByStatus()
         {
             //Should be checked if student is active or not
@@ -51,9 +49,9 @@ namespace JDP.Services
                 yield return new StudentDto { FullName = student.FullName };
             }
         }
-
         #endregion StudentsGroupedByStatus
 
+        #region AvailableExamsToEnroll
         public async Task<IEnumerable<ExamDto>> GetListOfAvailableExamsToEnrollForStudent(int studentId)
         {
             // create extension method "ToDto" in which LINQ .Select method should be used
@@ -66,11 +64,41 @@ namespace JDP.Services
 
             return exams;
         }
+        #endregion AvailableExamsToEnroll
 
+        #region StudentExamListWithGrades
         public async Task<StudentExamListDto> GetStudentExamListWithGrades(int studentId)
         {
             // use LINQ .Aggregate method and .OrderBy grade
-            throw new NotImplementedException();
+
+            var student = await _studentRepository.GetStudentBy(studentId);
+
+            return new StudentExamListDto
+            {
+                StudentName = student.FullName,
+                Exams = GetExamsList(student.Exams).OrderBy(exam => exam.Grade)
+            };
+
+            //// Determine whether any string in the array is longer than "banana".
+            //string[] fruits = { "apple", "mango", "orange", "passionfruit", "grape" };
+            //string longestName = fruits.Aggregate("banana", (longest, next) => next.Length > longest.Length ? next : longest, fruit => fruit.ToUpper());
+
+            //// Count the even numbers in the array, using a seed value of 0.
+            //int[] ints = { 4, 8, 8, 3, 9, 0, 7, 8, 2 };
+            //int numEven = ints.Aggregate(0, (total, next) => next % 2 == 0 ? total + 1 : total);
         }
+
+        private IEnumerable<ExamGradeDto> GetExamsList(IEnumerable<Models.ExamStatus> examStatuses)
+        {
+            foreach (var examStatus in examStatuses)
+            {
+                yield return new ExamGradeDto
+                {
+                    ExamName = examStatus.Exam.Title,
+                    Grade = examStatus.Grade.ToString()
+                };
+            }
+        }
+        #endregion StudentExamListWithGrades
     }
 }
