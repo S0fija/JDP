@@ -1,9 +1,9 @@
-﻿using System;
-using JDP.Contracts.Repositories;
+﻿using JDP.Contracts.Repositories;
 using JDP.Contracts.Services;
 using JDP.Repositories;
 using JDP.Services;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace JDP
 {

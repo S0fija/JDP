@@ -1,8 +1,8 @@
-﻿using System;
+﻿using JDP.Contracts.Services;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using JDP.Contracts.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace JDP
 {

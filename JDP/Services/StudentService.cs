@@ -72,6 +72,15 @@ namespace JDP.Services
             // use LINQ .Aggregate method and .OrderBy grade
 
             var student = await _studentRepository.GetStudentBy(studentId);
+            var exams = student.Exams.Aggregate(new List<ExamGradeDto>(), (list, examStatus) =>
+            {
+                list.Append(new ExamGradeDto
+                {
+                    ExamName = examStatus.Exam.Title,
+                    Grade = examStatus.Grade.ToString()
+                });
+                return list;
+            });
 
             return new StudentExamListDto
             {

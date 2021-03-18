@@ -1,11 +1,11 @@
-﻿using System;
+﻿using JDP.Contracts.Repositories;
+using JDP.Fixtures;
+using JDP.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using JDP.Contracts.Repositories;
-using JDP.Fixtures;
-using JDP.Models;
 
 namespace JDP.Repositories
 {
