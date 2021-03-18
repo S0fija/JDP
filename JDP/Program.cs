@@ -12,6 +12,7 @@ namespace JDP
         // - Create method for assigning exam to student
         // - Write unit tests for all services public methods
         // - Optimize DI where it is possible
+
         static async Task Main(string[] args)
         {
             var serviceProvider = AppStartup.BuildServiceProvider();
@@ -24,10 +25,10 @@ namespace JDP
             });
 
             var studentService = serviceProvider.GetService<IStudentService>();
-            var studentStatus = await studentService.GetListOfAvailableExamsToEnrollForStudent(4);
-            var studentsExamsGrades = await studentService.GetStudentExamListWithGrades(4);
 
-            var nesto = 0;
+            var availableExamsForStudent = await studentService.GetListOfAvailableExamsToEnrollForStudent(4);
+            
+            var studentsExamsWithGradesList = await studentService.GetStudentExamListWithGrades(4);
         }
     }
 }

@@ -2,6 +2,7 @@
 using JDP.Contracts.Services;
 using JDP.Dtos;
 using JDP.Extensions;
+using JDP.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -72,41 +73,24 @@ namespace JDP.Services
             // use LINQ .Aggregate method and .OrderBy grade
 
             var student = await _studentRepository.GetStudentBy(studentId);
-            var exams = student.Exams.Aggregate(new List<ExamGradeDto>(), (list, examStatus) =>
-            {
-                list.Append(new ExamGradeDto
+
+            var exams = student.Exams.Aggregate(new List<ExamGradeDto>(),
+                (list, examStatus) =>
                 {
-                    ExamName = examStatus.Exam.Title,
-                    Grade = examStatus.Grade.ToString()
-                });
-                return list;
-            });
+                    list.Add(new ExamGradeDto
+                    {
+                        ExamName = examStatus.Exam.Title,
+                        Grade = examStatus.Grade.ToString()
+                    });
+                    return list;
+                })
+                .OrderBy(exam => exam.Grade);
 
             return new StudentExamListDto
             {
                 StudentName = student.FullName,
-                Exams = GetExamsList(student.Exams).OrderBy(exam => exam.Grade)
+                Exams = exams
             };
-
-            //// Determine whether any string in the array is longer than "banana".
-            //string[] fruits = { "apple", "mango", "orange", "passionfruit", "grape" };
-            //string longestName = fruits.Aggregate("banana", (longest, next) => next.Length > longest.Length ? next : longest, fruit => fruit.ToUpper());
-
-            //// Count the even numbers in the array, using a seed value of 0.
-            //int[] ints = { 4, 8, 8, 3, 9, 0, 7, 8, 2 };
-            //int numEven = ints.Aggregate(0, (total, next) => next % 2 == 0 ? total + 1 : total);
-        }
-
-        private IEnumerable<ExamGradeDto> GetExamsList(IEnumerable<Models.ExamStatus> examStatuses)
-        {
-            foreach (var examStatus in examStatuses)
-            {
-                yield return new ExamGradeDto
-                {
-                    ExamName = examStatus.Exam.Title,
-                    Grade = examStatus.Grade.ToString()
-                };
-            }
         }
         #endregion StudentExamListWithGrades
     }
