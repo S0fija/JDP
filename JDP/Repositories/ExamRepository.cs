@@ -16,10 +16,10 @@ namespace JDP.Repositories
             return DataSource.Exams;
         }
 
-        public async Task<IEnumerable<Exam>> GetExams(Expression<Func<Exam, bool>> predicate)
-        {
-            var students = DataSource.Exams.AsQueryable().Where(predicate);
-            return students;
-        }
+        //public async Task<IEnumerable<Exam>> GetExams(Expression<Func<Exam, bool>> predicate)
+        //{
+        //    var students = DataSource.Exams.AsQueryable().Where(predicate);
+        //    return students;
+        //}
     }
 }

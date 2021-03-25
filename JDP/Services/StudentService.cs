@@ -59,7 +59,10 @@ namespace JDP.Services
 
             var student = await _studentRepository.GetStudentBy(studentId);
             var alredyEnrolledExamsIds = student.Exams.Select(studentExam => studentExam.Exam.Id).ToList();
-            var examsAvailableForEnrollment = await _examRepository.GetExams(exam => !alredyEnrolledExamsIds.Contains(exam.Id));
+
+            var allExams = await _examRepository.GetExams();
+
+            var examsAvailableForEnrollment = allExams.Where(exam => !alredyEnrolledExamsIds.Contains(exam.Id));
 
             var exams = examsAvailableForEnrollment.Select(exam => exam.ToExamDto()).ToList();
 

@@ -9,6 +9,6 @@ namespace JDP.Contracts.Repositories
     public interface IExamRepository
     {
         Task<IEnumerable<Exam>> GetExams();
-        Task<IEnumerable<Exam>> GetExams(Expression<Func<Exam, bool>> predicate);
+        //Task<IEnumerable<Exam>> GetExams(Expression<Func<Exam, bool>> predicate);
     }
 }
