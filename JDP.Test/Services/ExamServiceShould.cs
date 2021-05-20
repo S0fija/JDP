@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using AutoBogus;
+using FluentAssertions;
 using JDP.Contracts.Repositories;
 using JDP.Models;
 using JDP.Services;
@@ -33,21 +34,24 @@ namespace JDP.Test.Services
             var examsResults = await _systemUnderTest.GetListOfAvailableExams();
 
             // Assert
-            examsResults.Should().HaveCount(3);
-            examsResults.FirstOrDefault()?.ExamName.Should().Be("Exam 1");
-            examsResults.ToList()[1]?.ExamName.Should().Be("Exam 2");
-            examsResults.ToList()[2]?.ExamName.Should().Be("Exam 3");
+            examsResults.Should().HaveCount(10);
+            //examsResults.FirstOrDefault()?.ExamName.Should().Be("Exam 1");
+            //examsResults.ToList()[1]?.ExamName.Should().Be("Exam 2");
+            //examsResults.ToList()[2]?.ExamName.Should().Be("Exam 3");
             examsResults.Should().NotContainNulls();
             /// ...
 
             //OR
-            Assert.Equal(3, examsResults.Count());
-            Assert.Equal("Exam 1", examsResults.FirstOrDefault()?.ExamName);
+            Assert.Equal(10, examsResults.Count());
+            //Assert.Equal("Exam 1", examsResults.FirstOrDefault()?.ExamName);
             /// ...
         }
 
         private List<Exam> GetMockExams()
         {
+            var autoFaker = new AutoFaker<Exam>();
+            var exams1 = Enumerable.Range(0, 10).Select(_ => autoFaker.Generate()).ToList();
+
             var exams = new List<Exam>()
                 {
                     new Exam
@@ -66,7 +70,8 @@ namespace JDP.Test.Services
                         Title = "Exam 3"
                     }
                 };
-            return exams;
+
+            return exams1;
         }
     }
 }

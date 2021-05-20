@@ -46,13 +46,13 @@ namespace JDP.Tests.Services
             var studentResult = await _systemUnderTest.GetListOfAvailableExamsToEnrollForStudent(studentId);
 
             // Assert
-            studentResult.Should().HaveCount(3);
-            studentResult.FirstOrDefault()?.ExamName.Should().Be("Exam 3");
-            studentResult.ToList()[1]?.ExamName.Should().Be("Exam 4");
-            studentResult.ToList()[2]?.ExamName.Should().Be("Exam 5");
+            studentResult.Should().HaveCount(7);
+            //studentResult.FirstOrDefault()?.ExamName.Should().Be("Exam 3");
+            //studentResult.ToList()[1]?.ExamName.Should().Be("Exam 4");
+            //studentResult.ToList()[2]?.ExamName.Should().Be("Exam 5");
             studentResult.Should().NotContainNulls();
         }
-        
+
         [Fact]
         public async Task GetStudentsGroupedByStatus_ReturnObject()
         {
@@ -67,15 +67,15 @@ namespace JDP.Tests.Services
             var studentStatusInfo = await _systemUnderTest.GetStudentsGroupedByStatus();
 
             // Assert
-            studentStatusInfo.ActiveStudents.Should().HaveCount(3);
-            studentStatusInfo.InactiveStudents.Should().HaveCount(1);
+            studentStatusInfo.ActiveStudents.Should().HaveCountLessThan(5);
+            studentStatusInfo.InactiveStudents.Should().HaveCountLessThan(5);
 
-            studentStatusInfo.ActiveStudents.FirstOrDefault()?.FullName.Should().Be("Student 1");
-            studentStatusInfo.InactiveStudents.FirstOrDefault()?.FullName.Should().Be("Student 3");
+            //studentStatusInfo.ActiveStudents.FirstOrDefault()?.FullName.Should().Be("Student 1");
+            //studentStatusInfo.InactiveStudents.FirstOrDefault()?.FullName.Should().Be("Student 3");
 
             //studentResult.Should().NotContainNulls();
         }
-        
+
         [Fact]
         public async Task GetStudentExamListWithGrades_ReturnObject()
         {
@@ -91,193 +91,86 @@ namespace JDP.Tests.Services
             var studentExams = await _systemUnderTest.GetStudentExamListWithGrades(studentId);
 
             // Assert
-            studentExams.Exams.Should().HaveCount(2);
-            studentExams.Exams.FirstOrDefault()?.ExamName.Should().Be("Exam 1");
+            studentExams.Exams.Should().HaveCount(3);
+            //studentExams.Exams.FirstOrDefault()?.ExamName.Should().Be("Exam 1");
 
-            studentExams.StudentName.Should().Be("Sofija Spasic");
+            //studentExams.StudentName.Should().Be("Sofija Spasic");
         }
 
         private Student GetMockStudentBy(int studentId)
         {
-            var exams = new List<ExamStatus>()
-                {
-                    new ExamStatus()
-                    {
-                        Exam = new Exam
-                        {
-                            Id = 1,
-                            Title = "Exam 1"
-                        },
-                        Grade = ExamGrade.A
-                    },
-                    new ExamStatus()
-                    {
-                        Exam = new Exam
-                        {
-                            Id = 2,
-                            Title = "Exam 2"
-                        },
-                        Grade = ExamGrade.B
-                    }
-                };
+            var faker = new Faker();
+            var exams = GetExamStatuses(3);
 
             return new Student
             {
                 Id = studentId,
-                FullName = "Sofija Spasic",
-                ActiveStatusExpirationDateTime = new System.DateTime(2021, 12, 31),
+                FullName = faker.Person.FullName,
+                ActiveStatusExpirationDateTime = GetRandomDateNearToday(10, 3),
                 Exams = exams
             };
         }
 
         private List<Exam> GetMockExams()
         {
-            //https://github.com/nickdodd79/AutoBogus
             var autoFaker = new AutoFaker<Exam>();
-            var exams1 = Enumerable.Range(0, 3).Select(_ => autoFaker.Generate()).ToList();
+            var exams1 = Enumerable.Range(0, 10).Select(_ => autoFaker.Generate()).ToList();
 
-            //https://github.com/bchavez/Bogus
             var faker = new Faker();
             int examId = 0;
-            var exams2 = Enumerable.Range(0, 3)
-                .Select(_ => new Exam() { Id = ++examId, Title = faker.Hacker.Phrase() }).ToList();
+            var exams = Enumerable.Range(0, 10)
+                //.Select(_ => new Exam() { Id = ++examId, Title = faker.Hacker.Phrase() }).ToList();
+                .Select(_ => new Exam() { Id = ++examId, Title = faker.Music.Genre() }).ToList();
 
-            var exams = new List<Exam>()
-                {
-                    new Exam
-                    {
-                        Id = 1,
-                        Title = "Exam 1"
-                    },
-                    new Exam
-                    {
-                        Id = 2,
-                        Title = "Exam 2"
-                    },
-                    new Exam
-                    {
-                        Id = 3,
-                        Title = "Exam 3"
-                    },
-                    new Exam
-                    {
-                        Id = 4,
-                        Title = "Exam 4"
-                    },
-                    new Exam
-                    {
-                        Id = 5,
-                        Title = "Exam 5"
-                    }
-                };
             return exams;
         }
 
         private IEnumerable<Student> GetMockStudents(Expression<Func<Student, bool>> predicate)
         {
-            var exams = GetMockExams();
-            List<Student> students = new List<Student>()
-            {
-                new Student
+            var studentId = 1;
+            var students = Enumerable.Range(0, 4)
+                .Select(_ => new Student
                 {
-                    Id = 1,
-                    FullName = "Student 1",
-                    ActiveStatusExpirationDateTime = DateTime.Now.AddDays(10),
-                    Exams = new List<ExamStatus>()
-                    {
-                        new ExamStatus()
-                        {
-                            Exam = exams[0] ,
-                            Grade = ExamGrade.A
-                        },
-                        new ExamStatus()
-                        {
-                            Exam = exams[1] ,
-                            Grade = ExamGrade.B
-                        }
-                    }
-                },
-                new Student
-                {
-                    Id = 2,
-                    FullName = "Student 2",
-                    ActiveStatusExpirationDateTime = DateTime.Now.AddDays(10),
-                    Exams = new List<ExamStatus>()
-                    {
-                        new ExamStatus()
-                        {
-                            Exam = exams[0] ,
-                            Grade = ExamGrade.B
-                        },
-                        new ExamStatus()
-                        {
-                            Exam = exams[1] ,
-                            Grade = ExamGrade.C
-                        },
-                        new ExamStatus()
-                        {
-                            Exam = exams[2] ,
-                            Grade = ExamGrade.D
-                        }
-                    }
-                },
-                new Student
-                {
-                    Id = 3,
-                    FullName = "Student 3",
-                    ActiveStatusExpirationDateTime = DateTime.Now.AddDays(-10),
-                    Exams = new List<ExamStatus>()
-                    {
-                        new ExamStatus()
-                        {
-                            Exam = exams[4] ,
-                            Grade = ExamGrade.A
-                        },
-                        new ExamStatus()
-                        {
-                            Exam = exams[2] ,
-                            Grade = ExamGrade.Unrated
-                        },
-                        new ExamStatus()
-                        {
-                            Exam = exams[3] ,
-                            Grade = ExamGrade.Unrated
-                        }
-                    }
-                },
-                new Student
-                {
-                    Id = 4,
-                    FullName = "Student 4",
-                    ActiveStatusExpirationDateTime = DateTime.Now.AddDays(10),
-                    Exams = new List<ExamStatus>()
-                    {
-                        new ExamStatus()
-                        {
-                            Exam = exams[4] ,
-                            Grade = ExamGrade.A
-                        },
-                        new ExamStatus()
-                        {
-                            Exam = exams[1] ,
-                            Grade = ExamGrade.B
-                        },
-                        new ExamStatus()
-                        {
-                            Exam = exams[2] ,
-                            Grade = ExamGrade.C
-                        },
-                        new ExamStatus()
-                        {
-                            Exam = exams[3] ,
-                            Grade = ExamGrade.A
-                        }
-                    }
-                }
-            };
+                    Id = studentId++,
+                    FullName = GetRandomPersonFullName(),
+                    ActiveStatusExpirationDateTime = GetRandomDateNearToday(20, 20),
+                    Exams = GetExamStatuses(2)
+                }).ToList();
 
             var response = students.AsQueryable().Where(predicate);
             return response;
+        }
+
+        private List<ExamStatus> GetExamStatuses(int numberOfStatuses)
+        {
+            var faker = new Faker();
+            var examId = 1;
+
+            var examStatuses = Enumerable.Range(0, numberOfStatuses)
+                .Select(_ => new ExamStatus
+                {
+                    Exam = new Exam
+                    {
+                        Id = examId++,
+                        Title = faker.Company.CatchPhrase()
+                    },
+                    Grade = (ExamGrade)examId
+                })
+                .ToList();
+
+            return examStatuses;
+        }
+
+        private string GetRandomPersonFullName()
+        {
+            var faker = new Faker();
+            return faker.Person.FullName;
+        }
+
+        private DateTime GetRandomDateNearToday(int numberOfDaysBeforeToday, int numberOfDaysAfterToday)
+        {
+            var faker = new Faker();
+            return faker.Date.Between(DateTime.Now.AddDays(-numberOfDaysBeforeToday), DateTime.Now.AddDays(numberOfDaysAfterToday));
         }
     }
 }

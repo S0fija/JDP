@@ -2,7 +2,7 @@
 using JDP.Contracts.Services;
 using JDP.Dtos;
 using JDP.Extensions;
-using JDP.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,9 +16,10 @@ namespace JDP.Services
         private const bool StudentIsActive = true;
         private const bool StudentIsInactive = false;
 
+        //public StudentService(Lazy<IStudentRepository> studentRepository, IExamRepository examRepository)
         public StudentService(IStudentRepository studentRepository, IExamRepository examRepository)
         {
-            _studentRepository = studentRepository;
+            _studentRepository = studentRepository/*.Value*/;
             _examRepository = examRepository;
         }
 

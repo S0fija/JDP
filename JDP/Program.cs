@@ -8,10 +8,10 @@ namespace JDP
 {
     class Program
     {
-        // - Implement methods of IStudentService
-        // - Create method for assigning exam to student
-        // - Write unit tests for all services public methods
-        // - Optimize DI where it is possible
+        // - Implement methods of IStudentService DONE
+        // - Create method for assigning exam to student DONE
+        // - Write unit tests for all services public methods DONE
+        // - Optimize DI where it is possible ?
 
         static async Task Main(string[] args)
         {
@@ -19,6 +19,7 @@ namespace JDP
 
             var examService = serviceProvider.GetService<IExamService>();
             var exams =  await examService.GetListOfAvailableExams();
+
             exams.ToList().ForEach(exam =>
             {
                 Console.WriteLine(exam.ExamName);
