@@ -16,13 +16,13 @@ namespace JDP.Tests.Services
 {
     public class StudentServiceShould
     {
-        private Mock<IStudentRepository> _studentRepository;
+        private Mock<Func<IStudentRepository>> _studentRepository;
         private Mock<IExamRepository> _examRepository;
         private StudentService _systemUnderTest;
 
         public StudentServiceShould()
         {
-            _studentRepository = new Mock<IStudentRepository>();
+            _studentRepository = new Mock<Func<IStudentRepository>>();
             _examRepository = new Mock<IExamRepository>();
             _systemUnderTest = new StudentService(_studentRepository.Object, _examRepository.Object);
         }
@@ -36,7 +36,7 @@ namespace JDP.Tests.Services
             var exams = GetMockExams();
 
             _studentRepository
-                .Setup(instance => instance.GetStudentBy(studentId))
+                .Setup(instance => instance().GetStudentBy(studentId))
                 .ReturnsAsync(student);
             _examRepository
                 .Setup(instance => instance.GetExams())
@@ -60,7 +60,7 @@ namespace JDP.Tests.Services
             var studentsList = GetMockStudents(student => true);
 
             _studentRepository
-                .Setup(instance => instance.GetStudents(student => true))
+                .Setup(instance => instance().GetStudents(student => true))
                 .ReturnsAsync(studentsList);
 
             // Act
@@ -84,7 +84,7 @@ namespace JDP.Tests.Services
             var student = GetMockStudentBy(studentId);
 
             _studentRepository
-                .Setup(instance => instance.GetStudentBy(studentId))
+                .Setup(instance => instance().GetStudentBy(studentId))
                 .ReturnsAsync(student);
 
             // Act

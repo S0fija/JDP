@@ -11,15 +11,14 @@ namespace JDP.Services
 {
     public class StudentService : IStudentService
     {
-        private readonly IStudentRepository _studentRepository;
+        private readonly Func<IStudentRepository> _studentRepository;
         private readonly IExamRepository _examRepository;
         private const bool StudentIsActive = true;
         private const bool StudentIsInactive = false;
 
-        //public StudentService(Lazy<IStudentRepository> studentRepository, IExamRepository examRepository)
-        public StudentService(IStudentRepository studentRepository, IExamRepository examRepository)
+        public StudentService(Func<IStudentRepository> studentRepository, IExamRepository examRepository)
         {
-            _studentRepository = studentRepository/*.Value*/;
+            _studentRepository = studentRepository;
             _examRepository = examRepository;
         }
 
@@ -29,7 +28,7 @@ namespace JDP.Services
             //Should be checked if student is active or not
             // use LINQ .GroupBy method
 
-            var allStudents = await _studentRepository.GetStudents(student => true);
+            var allStudents = await _studentRepository().GetStudents(student => true);
             var studentsGroupedByStatus = allStudents.GroupBy(student => student.IsStudentActive());
 
             var activeStudentsGroup = studentsGroupedByStatus.First(group => group.Key == StudentIsActive);
@@ -58,7 +57,7 @@ namespace JDP.Services
         {
             // create extension method "ToDto" in which LINQ .Select method should be used
 
-            var student = await _studentRepository.GetStudentBy(studentId);
+            var student = await _studentRepository().GetStudentBy(studentId);
             var alredyEnrolledExamsIds = student.Exams.Select(studentExam => studentExam.Exam.Id).ToList();
 
             var allExams = await _examRepository.GetExams();
@@ -76,7 +75,7 @@ namespace JDP.Services
         {
             // use LINQ .Aggregate method and .OrderBy grade
 
-            var student = await _studentRepository.GetStudentBy(studentId);
+            var student = await _studentRepository().GetStudentBy(studentId);
 
             var exams = student.Exams.Aggregate(new List<ExamGradeDto>(),
                 (list, examStatus) =>

@@ -28,6 +28,8 @@ namespace JDP
                 .AddTransient<IExamService, ExamService>()
                 .AddTransient<IStudentService, StudentService>();
 
+            services.AddSingleton<Func<IStudentRepository>>(x => () => x.GetService<IStudentRepository>());
+
             return services;
         }
     }
